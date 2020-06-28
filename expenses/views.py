@@ -25,18 +25,21 @@ def search_expenses(request):
 
 @login_required(login_url='/authentication/login')
 def index(request):
-    categories = Category.objects.all()
-    expenses = Expense.objects.filter(owner=request.user)
-    paginator = Paginator(expenses, 5)
-    page_number = request.GET.get('page')
-    page_obj = Paginator.get_page(paginator, page_number)
-    currency = UserPreference.objects.get(user=request.user).currency
-    context = {
-        'expenses': expenses,
-        'page_obj': page_obj,
-        'currency': currency
-    }
-    return render(request, 'expenses/index.html', context)
+    try:
+        categories = Category.objects.all()
+        expenses = Expense.objects.filter(owner=request.user)
+        paginator = Paginator(expenses, 5)
+        page_number = request.GET.get('page')
+        page_obj = Paginator.get_page(paginator, page_number)
+        currency = UserPreference.objects.get(user=request.user).currency
+        context = {
+            'expenses': expenses,
+            'page_obj': page_obj,
+            'currency': currency
+        }
+        return render(request, 'expenses/index.html', context)
+    except:
+        return render(request, 'expenses/index.html')
 
 
 @login_required(login_url='/authentication/login')
